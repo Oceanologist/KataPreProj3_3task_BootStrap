@@ -13,11 +13,11 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class AppUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private Long id;
 
     @Column(name = "name")
     @Size(min = 2, message = "Не меньше 2 знаков")
@@ -42,10 +42,10 @@ public class User implements UserDetails {
     private Set<Role> roles = new HashSet<>();
 
 
-    public User() {
+    public AppUser() {
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 

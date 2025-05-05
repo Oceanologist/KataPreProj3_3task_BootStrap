@@ -1,20 +1,18 @@
 package ru.kata.spring.boot_security.demo.service;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dao.UserDAO;
+import ru.kata.spring.boot_security.demo.entity.AppUser;
 import ru.kata.spring.boot_security.demo.entity.Role;
-import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
-import java.util.Collection;
-import java.util.List;
+
+import java.util.Optional;
+
 
 @Service
 @Transactional
@@ -29,60 +27,49 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Transactional
     @Override
-    public void add(User user) {
+    public void add(AppUser user) {
         userRepository.save(user);
 
     }
 
-//    @Transactional
-//    @Override
-//    public void delete(int id) {
-//        userDAO.delete(id);
-//    }
-//
-//    @Transactional
-//    @Override
-//    public void update(User user, int id) {
-//        userDAO.update(user, id);
-//
-//    }
-//
-//    @Transactional(readOnly = true)
-//    @Override
-//    public User findById(int id) {
-//        return userDAO.findUserById(id);
-//
-//    }
-//
-//    @Transactional(readOnly = true)
-//    @Override
-//    public List<User> viewAllUsers() {
-//        System.out.println("viewAllUsers method working");
-//        List<User> userList = userDAO.viewAllUsers();
-//        for (User user : userList) {
-//            user.toString();
-//        }
-//
-//        return userList;
-//    }
-//
-//
+    @Transactional
+    @Override
+    public void delete(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<AppUser> findById(Long id) {
+
+        return userRepository.findById(id);
+
+    }
+
+    @Transactional
+    @Override
+    public void update(AppUser updatedUser, Long id) {
+        AppUser userModifiable = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("пользователь не найден"));
+        userModifiable.setName(updatedUser.getName());
+        userModifiable.setSurname(updatedUser.getSurname());
+        userModifiable.setAge(updatedUser.getAge());
+    }
+
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDetails findUser = userRepository.findByUsername(username);
         if (findUser == null) {
-            throw new UsernameNotFoundException("User not found");
+            throw new UsernameNotFoundException("пользователь не найден");
         }
 
         return findUser;
     }
-//
-//    void assignRoleToUser(String userName, Role roleName) {
-//        userDAO.findUserByName(userName).addRole(roleName);
-//
-//    }
 
-    void removeRoleFromUser(int userId, String roleName) {
+    public void assignRoleToUser(String userName, Role roleName) {
+        userRepository.findByUsername(userName).addRole(roleName);
 
     }
+
 }

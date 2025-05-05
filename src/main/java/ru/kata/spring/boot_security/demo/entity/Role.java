@@ -23,7 +23,7 @@ public class Role implements GrantedAuthority {
             joinColumns = @JoinColumn(name="role_id"),
             inverseJoinColumns =@JoinColumn(name="user_id"))
     @Transient
-    List<User> users =new ArrayList<>();
+    List<AppUser> users =new ArrayList<>();
 
     public Role() {
     }
