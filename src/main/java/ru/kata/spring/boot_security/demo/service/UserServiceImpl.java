@@ -1,6 +1,8 @@
 package ru.kata.spring.boot_security.demo.service;
 
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,6 +14,7 @@ import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -58,17 +61,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails findUser = userRepository.findByUsername(username);
-        if (findUser == null) {
-            throw new UsernameNotFoundException("пользователь не найден");
-        }
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
 
-        return findUser;
+        AppUser appuser = userRepository.findByUsername(username)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("User not found: " + username));
+
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(appuser.getUsername())
+                .password(appuser.getPassword())
+                .authorities(appuser.getRoles().stream()
+                        .map(role -> new SimpleGrantedAuthority(role.getRole()))
+                        .collect(Collectors.toList()))
+                .build();
     }
 
     public void assignRoleToUser(String userName, Role roleName) {
-        userRepository.findByUsername(userName).addRole(roleName);
+        userRepository.findByUsername(userName).addRole(roleName).orElseThrow(() ->
+                new UsernameNotFoundException("User not found: " + userName));
 
     }
 

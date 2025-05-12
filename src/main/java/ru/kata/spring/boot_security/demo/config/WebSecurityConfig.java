@@ -1,5 +1,7 @@
 package ru.kata.spring.boot_security.demo.config;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,22 +15,48 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserDetailsService userDetailsService;
+public class WebSecurityConfig {
 
-    @Autowired
-    public WebSecurityConfig(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/hello_page/**").permitAll()
+                        .requestMatchers("/user_page/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/admin_page/**").hasRole("ADMIN")
+                        .anyRequest().authenticated())
+
+                .formLogin(form -> form // 3. Настройка формы входа
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/dashboard")
+                        .failureUrl("/login?error=true")
+                        .permitAll()
+                )
+                .logout(logout -> logout // 4. Настройка выхода
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .deleteCookies("JSESSIONID")
+                )
+                .exceptionHandling(ex -> ex // 5. Обработка ошибок
+                        .accessDeniedPage("/access-denied")
+                );)
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService)  // Указываем свой UserDetailsService
-                .passwordEncoder(passwordEncoder());    // Добавляем шифрование паролей
-    }
+
+//    private final UserDetailsService userDetailsService;
+//
+//    @Autowired
+//    public WebSecurityConfig(UserDetailsService userDetailsService) {
+//        this.userDetailsService = userDetailsService;
+//    }
+//
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(userDetailsService)  // Указываем свой UserDetailsService
+//                .passwordEncoder(passwordEncoder());    // Добавляем шифрование паролей
+//    }
 
 
     // аутентификация inMemory

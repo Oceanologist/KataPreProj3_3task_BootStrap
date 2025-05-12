@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.HashSet;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -93,7 +94,7 @@ public class AppUser implements UserDetails {
     }
 
     public void addRole(Role role) {
-        this.roles.add(role);
+        roles.add(role);
     }
 }
 
