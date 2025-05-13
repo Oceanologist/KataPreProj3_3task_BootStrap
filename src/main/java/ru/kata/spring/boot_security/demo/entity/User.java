@@ -9,12 +9,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.HashSet;
 
-import java.util.Optional;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class AppUser implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -43,7 +42,7 @@ public class AppUser implements UserDetails {
     private Set<Role> roles = new HashSet<>();
 
 
-    public AppUser() {
+    public User() {
     }
 
     public Long getId() {

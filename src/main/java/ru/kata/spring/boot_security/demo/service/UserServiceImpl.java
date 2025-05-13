@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.service;
 
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.entity.AppUser;
+import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
@@ -30,9 +29,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Transactional
     @Override
-    public void add(AppUser user) {
+    public void add(User user) {
         userRepository.save(user);
-
     }
 
     @Transactional
@@ -43,7 +41,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<AppUser> findById(Long id) {
+    public Optional<User> findById(Long id) {
 
         return userRepository.findById(id);
 
@@ -51,8 +49,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Transactional
     @Override
-    public void update(AppUser updatedUser, Long id) {
-        AppUser userModifiable = userRepository.findById(id)
+    public void update(User updatedUser, Long id) {
+        User userModifiable = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("пользователь не найден"));
         userModifiable.setName(updatedUser.getName());
         userModifiable.setSurname(updatedUser.getSurname());
@@ -60,27 +58,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
 
-    @Override
-    public UserDetails loadUserByUsername(String username)
-            throws UsernameNotFoundException {
 
-        AppUser appuser = userRepository.findByUsername(username)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found: " + username));
-
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(appuser.getUsername())
-                .password(appuser.getPassword())
-                .authorities(appuser.getRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority(role.getRole()))
-                        .collect(Collectors.toList()))
-                .build();
-    }
 
     public void assignRoleToUser(String userName, Role roleName) {
         userRepository.findByUsername(userName).addRole(roleName).orElseThrow(() ->
                 new UsernameNotFoundException("User not found: " + userName));
 
     }
-
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username) // Optional<User>
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь " + username + " не найден"));
+    }
 }
