@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,20 +28,25 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated())
 
                 .formLogin(form -> form // 3. Настройка формы входа
-                        .loginPage("/login")
                         .defaultSuccessUrl("/dashboard")
-                        .failureUrl("/login?error=true")
+                        .failureUrl("hello_page")
                         .permitAll()
                 )
                 .logout(logout -> logout // 4. Настройка выхода
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/hello_page")
                         .deleteCookies("JSESSIONID")
                 )
                 .exceptionHandling(ex -> ex // 5. Обработка ошибок
                         .accessDeniedPage("/access-denied")
-                );)
+                );
+        return http.build();
     }
+
+    /* access-denied - ошибка прав доступа юзер зашел к админу
+    /dashboard здесь нужно расписать куда перенаправлять к юзеру или к админу
+
+     */
 
 
 //    private final UserDetailsService userDetailsService;
