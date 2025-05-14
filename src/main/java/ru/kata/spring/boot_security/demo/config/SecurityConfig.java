@@ -25,8 +25,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/hello_page/**").permitAll()
-                        .requestMatchers("/user_page/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/admin_page/**").hasRole("ADMIN")
+                        .requestMatchers("/user_page/**").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers("/admin_page/**").hasRole("ROLE_ADMIN")
                         .anyRequest().authenticated())
 
                 .formLogin(form -> form // 3. Настройка формы входа
