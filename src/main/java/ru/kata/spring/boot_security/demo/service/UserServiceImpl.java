@@ -12,6 +12,7 @@ import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void add(User user) {
-        userRepository.save(user);
+        Optional<User> existingUser = userRepository.findByUsername(user.getUsername());
+        if (existingUser.isPresent()) {
+            throw new RuntimeException("Пользователь с таким именем уже существует выберите другое имя");
+        } else {
+            user.addRole("USER");
+            userRepository.save(user);
+        }
     }
 
     @Transactional
@@ -47,24 +54,24 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public List<User> viewAll() {
+        return userRepository.findAll();
+    }
+
     @Transactional
     @Override
-    public void update(User updatedUser, Long id) {
-        User userModifiable = userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("пользователь не найден"));
-        userModifiable.setName(updatedUser.getName());
-        userModifiable.setSurname(updatedUser.getSurname());
-        userModifiable.setAge(updatedUser.getAge());
+    public void update(Long userId, User updatedUser) {
+        updatedUser.setId(userId); // Устанавливаем ID для обновления
+        userRepository.save(updatedUser);
     }
 
 
-
-
-    public void assignRoleToUser(String userName, Role roleName) {
-        userRepository.findByUsername(userName).addRole(roleName).orElseThrow(() ->
-                new UsernameNotFoundException("User not found: " + userName));
-
-    }
+    //    public void assignRoleToUser(String userName, Role roleName) {
+//        userRepository.findByUsername(userName).addRole(roleName).orElseThrow(() ->
+//                new UsernameNotFoundException("User not found: " + userName));
+//
+//    }
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username) // Optional<User>
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь " + username + " не найден"));

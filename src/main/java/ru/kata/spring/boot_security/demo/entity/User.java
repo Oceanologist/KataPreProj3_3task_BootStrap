@@ -23,16 +23,9 @@ public class User implements UserDetails {
     @Size(min = 2, message = "Не меньше 2 знаков")
     private String name;
 
-    @Column(name = "surname")
-    @Size(min = 2, message = "Не меньше 2 знаков")
-    private String surname;
-
     @Size(min = 5, message = "Не меньше 5 знаков")
     @Column(name = "password")
     private String password;
-
-    @Column(name = "age", nullable = false)
-    private int age;
 
     @Transient
     @ManyToMany(fetch = FetchType.EAGER)
@@ -49,6 +42,10 @@ public class User implements UserDetails {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -57,25 +54,6 @@ public class User implements UserDetails {
         this.name = name;
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
 
     @Override
     public String getPassword() {
@@ -84,7 +62,20 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return name;
+        return null;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
@@ -92,8 +83,6 @@ public class User implements UserDetails {
         return getRoles();
     }
 
-    public void addRole(Role role) {
-        roles.add(role);
-    }
+
 }
 
