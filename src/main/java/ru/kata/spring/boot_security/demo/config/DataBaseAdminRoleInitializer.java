@@ -18,7 +18,7 @@ public class DataBaseAdminRoleInitializer {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public DataBaseAdminRoleInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, PasswordEncoder passwordEncoder1) {
+    public DataBaseAdminRoleInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -31,20 +31,23 @@ public class DataBaseAdminRoleInitializer {
     }
 
     void initAdminAndUserRoles() {
-        if (!roleRepository.existsByName("LORE_ADMIN")) {
+
+        if (!roleRepository.existsByName("ROLE_ADMIN")) {
             Role role = new Role();
-            role.setRole("ROLE_ADMIN");
+            role.setName("ROLE_ADMIN");
             roleRepository.save(role);
         }
         if (!roleRepository.existsByName("ROLE_USER")) {
             Role role = new Role();
-            role.setRole("ROLE_USER");
+            role.setName("ROLE_USER");
             roleRepository.save(role);
+            System.err.println("initAdminAndUserRoles");
         }
     }
 
 
     void initAdmin() {
+        System.err.println("initAdmin");
         if (!userRepository.findByUsername("admin").isPresent()) {
             Role adminRole = roleRepository.findByName("ROLE_ADMIN")
                     .orElseThrow(() -> new RuntimeException("Роль АДМИН не создана"));

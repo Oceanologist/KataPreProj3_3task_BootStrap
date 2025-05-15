@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.entity.Role;
+import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -22,22 +24,20 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Transactional
     @Override
     public void add(User user) {
-        Optional<User> existingUser = userRepository.findByUsername(user.getUsername());
-        if (existingUser.isPresent()) {
-            throw new RuntimeException("Пользователь с таким именем уже существует выберите другое имя");
-        } else {
-            user.addRole("USER");
-            userRepository.save(user);
-        }
+        user.setRoles(Set.of(roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("В классе UserServiceImp ошибка в поиске ROLE_USER"))));
+        userRepository.save(user);
     }
 
     @Transactional
@@ -49,9 +49,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @Override
     public Optional<User> findById(Long id) {
-
         return userRepository.findById(id);
-
     }
 
     @Override
@@ -66,12 +64,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(updatedUser);
     }
 
-
-    //    public void assignRoleToUser(String userName, Role roleName) {
-//        userRepository.findByUsername(userName).addRole(roleName).orElseThrow(() ->
-//                new UsernameNotFoundException("User not found: " + userName));
-//
-//    }
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username) // Optional<User>
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь " + username + " не найден"));

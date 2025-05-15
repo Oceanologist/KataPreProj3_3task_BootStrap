@@ -16,13 +16,13 @@ public class Role implements GrantedAuthority {
     private int id;
 
     @Column(name = "role",nullable = false)
-    private String role;
+    private String name;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="user-role_relationship",
             joinColumns = @JoinColumn(name="role_id"),
             inverseJoinColumns =@JoinColumn(name="user_id"))
-    @Transient
+
     List<User> users =new ArrayList<>();
 
     public Role() {
@@ -32,9 +32,9 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
-    public Role(int id, String role) {
+    public Role(int id, String name) {
         this.id = id;
-        this.role = role;
+        this.name = name;
     }
 
     public int getId() {
@@ -45,24 +45,24 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
-    public String getRole() {
-        return role;
+    public String getName() {
+        return name;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public String toString() {
         return "Role{" +
                "id=" + id +
-               ", role='" + role + '\'' +
+               ", role='" + name + '\'' +
                '}';
     }
 
     @Override
     public String getAuthority() {
-        return getRole();
+        return getName();
     }
 }

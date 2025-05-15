@@ -19,9 +19,9 @@ public class User implements UserDetails {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name",unique = true)
     @Size(min = 2, message = "Не меньше 2 знаков")
-    private String name;
+    private String username;
 
     @Size(min = 5, message = "Не меньше 5 знаков")
     @Column(name = "password")
@@ -47,23 +47,13 @@ public class User implements UserDetails {
     }
 
     public String getName() {
-        return name;
+        return username;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.username = name;
     }
 
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return null;
-    }
 
     public void setPassword(String password) {
         this.password = password;
@@ -78,11 +68,25 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public User(String name, String password) {
+        this.username = name;
+        this.password = password;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
     }
 
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
 
 }
 
