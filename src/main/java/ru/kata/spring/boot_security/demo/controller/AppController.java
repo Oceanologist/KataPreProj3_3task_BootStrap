@@ -29,11 +29,10 @@ public class AppController {
     }
 
     @GetMapping("/dashboard")
-    public String doAvtorisation(Authentication authentication,Model model) {
-        System.err.println("doAvtorisation");
-        System.err.println("User roles: " + authentication.getAuthorities());
+    public String doAvtorisation(Authentication authentication, Model model) {
         if (authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            model.addAttribute("users", userService.viewAll());
             return "admin_page";
         } else {
             return "user_page";
@@ -55,6 +54,7 @@ public class AppController {
 
     @PostMapping("users/new")
     public String createUser(@ModelAttribute("user") User user) {
+        System.err.println("Creating user: " + user.getUsername() + ", password: " + user.getPassword());
         userService.add(user);
         System.err.println("попытка перехода");
         return "redirect:/dashboard";

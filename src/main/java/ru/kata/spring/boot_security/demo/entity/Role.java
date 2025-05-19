@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "roles")
@@ -19,11 +21,11 @@ public class Role implements GrantedAuthority {
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="user-role_relationship",
+    @JoinTable(name="user_role",
             joinColumns = @JoinColumn(name="role_id"),
             inverseJoinColumns =@JoinColumn(name="user_id"))
 
-    List<User> users =new ArrayList<>();
+    Set<User> users =new HashSet<>();
 
     public Role() {
     }
@@ -59,6 +61,10 @@ public class Role implements GrantedAuthority {
                "id=" + id +
                ", role='" + name + '\'' +
                '}';
+    }
+
+    public Set<User> getUsers() {
+        return users;
     }
 
     @Override

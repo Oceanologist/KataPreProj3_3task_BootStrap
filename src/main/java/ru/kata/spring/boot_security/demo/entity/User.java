@@ -19,7 +19,7 @@ public class User implements UserDetails {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name",unique = true)
+    @Column(name = "username",unique = true)
     @Size(min = 2, message = "Не меньше 2 знаков")
     private String username;
 
@@ -27,9 +27,9 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @Transient
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user-role_relationship",
+
+    @ManyToMany(fetch = FetchType.EAGER )
+    @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
@@ -46,11 +46,11 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public String getName() {
+    public String getUsername() {
         return username;
     }
 
-    public void setName(String name) {
+    public void setUsername(String name) {
         this.username = name;
     }
 
@@ -83,9 +83,15 @@ public class User implements UserDetails {
         return password;
     }
 
-    @Override
-    public String getUsername() {
-        return username;
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+        role.getUsers().add(this);
+    }
+
+    public void removeRole(Role role) {
+        this.roles.remove(role);
+        role.getUsers().remove(this);
     }
 
 }

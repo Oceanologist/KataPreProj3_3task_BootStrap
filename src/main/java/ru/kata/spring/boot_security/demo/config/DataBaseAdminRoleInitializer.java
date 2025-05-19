@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.config;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -24,13 +25,14 @@ public class DataBaseAdminRoleInitializer {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     @PostConstruct
     public void initMethod() {
         initAdminAndUserRoles();
         initAdmin();
     }
 
-    void initAdminAndUserRoles() {
+    public void initAdminAndUserRoles() {
 
         if (!roleRepository.existsByName("ROLE_ADMIN")) {
             Role role = new Role();
@@ -45,20 +47,19 @@ public class DataBaseAdminRoleInitializer {
         }
     }
 
-
-    void initAdmin() {
+    public void initAdmin() {
 
         System.err.println(roleRepository.findByName("ROLE_ADMIN"));
         System.err.println(Set.of(roleRepository.findByName("ROLE_ADMIN")));
         System.err.println("initAdmin");
         if (!userRepository.findByUsername("admin").isPresent()) {
             User admin = new User();
-            admin.setName("admin");
+            admin.setUsername("admin");
             admin.setPassword(passwordEncoder.encode("admin123"));
             Role adminRole = roleRepository.findByName("ROLE_ADMIN")
                     .orElseThrow(() -> new RuntimeException("Role ROLE_ADMIN not found"));
 
-            admin.setRoles(Set.of(adminRole));
+            admin.addRole(adminRole);
             userRepository.save(admin);
         }
     }
