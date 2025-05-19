@@ -35,15 +35,19 @@
         <td th:text="${user.password}"></td>
         <td>
             <!-- Форма для редактирования -->
-            <form th:action="@{/users/edit}" method="get" class="action-form">
+            <form th:action="@{/admin/edit}" method="get" class="action-form">
                 <input type="hidden" name="id" th:value="${user.id}">
                 <button type="submit" class="btn">Изменить</button>
             </form>
 
             <!-- Форма для удаления -->
-            <form th:action="@{/users/delete}" method="post" class="action-form">
+            <form th:action="@{/admin/delete}" method="post" class="action-form">
                 <input type="hidden" name="id" th:value="${user.id}">
                 <button type="submit" class="btn">Удалить</button>
+            </form>
+            <form th:action="@{/admin/user_page}" method="get" class="action-form">
+                <input type="hidden" name="id" th:value="${user.id}">
+                <button type="submit" class="btn">Переход на страницу пользователя</button>
             </form>
         </td>
     </tr>
@@ -51,7 +55,8 @@
 </table>
 
 
-<a th:href="@{/users/new}">Добавить пользователя</a>
-
+<a th:href="@{/admin/new}">Добавить пользователя</a>
+<h1></h1>
+<a th:href="@{/logout}">Выйти</a>
 </body>
 </html>

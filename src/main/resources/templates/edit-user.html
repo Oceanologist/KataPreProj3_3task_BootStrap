@@ -8,7 +8,7 @@
 
 <h1>Редактирование пользователя</h1>
 
-<form method="post" th:action="@{/users/update}" th:object="${user}">
+<form method="post" th:action="@{/admin/update}" th:object="${user}">
     <!-- Все поля пользователя, включая скрытый ID -->
     <input type="hidden" th:field="*{id}">
 
@@ -27,6 +27,8 @@
 </form>
 
 <a th:href="@{/dashboard}">Назад к списку</a>
+<h1></h1>
+<a th:href="@{/logout}">Выйти</a>
 
 </body>
 </html>

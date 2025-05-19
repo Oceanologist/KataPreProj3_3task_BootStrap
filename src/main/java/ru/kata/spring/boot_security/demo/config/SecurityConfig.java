@@ -21,18 +21,19 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
-@Bean
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.
+        http
+                .userDetailsService(userDetailsService).
                 authorizeHttpRequests(auth -> auth
-                        .requestMatchers( "/hello_page/**", "/images/**").permitAll()
+                        .requestMatchers("/hello_page/**", "/images/**").permitAll()
                         .requestMatchers("/user_page/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/admin_page/**").hasRole("ADMIN")
                         .requestMatchers("/dashboard").authenticated()
                         .anyRequest().authenticated())
 
                 .formLogin(form -> form // 3. Настройка формы входа
-                        .defaultSuccessUrl("/dashboard",true)
+                        .defaultSuccessUrl("/dashboard", true)
                         .failureUrl("/hello_page?error=true")
                         .permitAll()
                 )

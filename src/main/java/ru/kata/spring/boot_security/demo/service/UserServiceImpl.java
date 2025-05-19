@@ -53,18 +53,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findByName(String name) {
+        return userRepository.findByUsername(name);
+    }
+
+    @Override
     public List<User> viewAll() {
         return userRepository.findAll();
     }
 
     @Transactional
     @Override
-    public void update( User updatedUser) {
+    public void update(User updatedUser) {
         userRepository.save(updatedUser);
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username) // Optional<User>
+        User user = userRepository.findByUsername(username) // Optional<User>
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь " + username + " не найден"));
+        user.getRoles().size();
+        return user;
     }
 }

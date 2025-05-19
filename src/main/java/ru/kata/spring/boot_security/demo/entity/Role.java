@@ -14,18 +14,18 @@ public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id",nullable = false)
+    @Column(name = "id", nullable = false)
     private int id;
 
-    @Column(name = "name",nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="user_role",
-            joinColumns = @JoinColumn(name="role_id"),
-            inverseJoinColumns =@JoinColumn(name="user_id"))
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
 
-    Set<User> users =new HashSet<>();
+    Set<User> users = new HashSet<>();
 
     public Role() {
     }

@@ -33,7 +33,6 @@ public class DataBaseAdminRoleInitializer {
     }
 
     public void initAdminAndUserRoles() {
-
         if (!roleRepository.existsByName("ROLE_ADMIN")) {
             Role role = new Role();
             role.setName("ROLE_ADMIN");
@@ -48,18 +47,14 @@ public class DataBaseAdminRoleInitializer {
     }
 
     public void initAdmin() {
-
-        System.err.println(roleRepository.findByName("ROLE_ADMIN"));
-        System.err.println(Set.of(roleRepository.findByName("ROLE_ADMIN")));
-        System.err.println("initAdmin");
         if (!userRepository.findByUsername("admin").isPresent()) {
             User admin = new User();
             admin.setUsername("admin");
             admin.setPassword(passwordEncoder.encode("admin123"));
-            Role adminRole = roleRepository.findByName("ROLE_ADMIN")
-                    .orElseThrow(() -> new RuntimeException("Role ROLE_ADMIN not found"));
-
+            Role adminRole = roleRepository.findByName("ROLE_ADMIN").orElseThrow(() -> new RuntimeException("Роль Admin не найдена"));
+            Role userRole = roleRepository.findByName("ROLE_USER").orElseThrow(() -> new RuntimeException("Роль User не найдена"));
             admin.addRole(adminRole);
+            admin.addRole(userRole);
             userRepository.save(admin);
         }
     }
