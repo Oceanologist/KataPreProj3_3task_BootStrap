@@ -47,13 +47,17 @@ public class DataBaseAdminRoleInitializer {
 
 
     void initAdmin() {
+
+        System.err.println(roleRepository.findByName("ROLE_ADMIN"));
+        System.err.println(Set.of(roleRepository.findByName("ROLE_ADMIN")));
         System.err.println("initAdmin");
         if (!userRepository.findByUsername("admin").isPresent()) {
-            Role adminRole = roleRepository.findByName("ROLE_ADMIN")
-                    .orElseThrow(() -> new RuntimeException("Роль АДМИН не создана"));
             User admin = new User();
             admin.setName("admin");
             admin.setPassword(passwordEncoder.encode("admin123"));
+            Role adminRole = roleRepository.findByName("ROLE_ADMIN")
+                    .orElseThrow(() -> new RuntimeException("Role ROLE_ADMIN not found"));
+
             admin.setRoles(Set.of(adminRole));
             userRepository.save(admin);
         }

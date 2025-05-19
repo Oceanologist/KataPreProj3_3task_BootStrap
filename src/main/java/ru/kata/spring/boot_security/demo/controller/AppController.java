@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,9 +16,11 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 public class AppController {
     private final UserService userService;
 
+
     @Autowired
     public AppController(UserService userService) {
         this.userService = userService;
+
     }
 
     @GetMapping("/hello_page")
@@ -26,37 +29,40 @@ public class AppController {
     }
 
     @GetMapping("/dashboard")
-    public String doAvtorisation(Authentication authentication) {
+    public String doAvtorisation(Authentication authentication,Model model) {
+        System.err.println("doAvtorisation");
+        System.err.println("User roles: " + authentication.getAuthorities());
         if (authentication.getAuthorities().stream()
-                .anyMatch(a -> a.equals("ROLE_ADMIN"))) {
-            return "/admin_page";
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            return "admin_page";
         } else {
-            return "/user_page";
+            return "user_page";
 
         }
     }
 
     @GetMapping
     public String viewAllUsers(Model model) {
-        model.addAttribute("users", userService.viewAllUsers());
+        model.addAttribute("users", userService.viewAll());
         return "allUsers";
     }
 
-    @GetMapping("/new")
+    @GetMapping("users/new")
     public String showFormAddUser(Model model) {
         model.addAttribute("user", new User());
         return "new";
     }
 
-    @PostMapping("/new")
+    @PostMapping("users/new")
     public String createUser(@ModelAttribute("user") User user) {
         userService.add(user);
-        return "redirect:/users";
+        System.err.println("попытка перехода");
+        return "redirect:/dashboard";
     }
 
-    @GetMapping("/edit")
-    public String showEditForm(@RequestParam("id") int id, Model model) {
-        User user = userService.findById(id);
+    @GetMapping("users/edit")
+    public String showEditForm(@RequestParam("id") Long id, Model model) {
+        User user = userService.findById(id).orElseThrow();
         if (user == null) {
             System.err.println("User not found with id: " + id);
         }
@@ -64,15 +70,15 @@ public class AppController {
         return "edit-user";
     }
 
-    @PostMapping("/update")
+    @PostMapping("users/update")
     public String updateUser(@ModelAttribute("user") User user) {
         userService.update(user); // Обновляем целиком
-        return "redirect:/users";
+        return "redirect:/dashboard";
     }
 
-    @PostMapping("/delete")
-    public String deleteUser(@RequestParam("id") int id) {
+    @PostMapping("users/delete")
+    public String deleteUser(@RequestParam("id") Long id) {
         userService.delete(id);
-        return "redirect:/users";
+        return "redirect:/dashboard";
     }
 }

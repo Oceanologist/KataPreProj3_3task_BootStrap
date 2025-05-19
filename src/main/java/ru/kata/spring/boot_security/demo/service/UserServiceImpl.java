@@ -59,8 +59,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void update(Long userId, User updatedUser) {
-        updatedUser.setId(userId); // Устанавливаем ID для обновления
+    public void update( User updatedUser) {
         userRepository.save(updatedUser);
     }
 

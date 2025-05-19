@@ -17,24 +17,26 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
 
     @Autowired
-    SecurityConfig( UserDetailsService userDetailsService){
-        this.userDetailsService=userDetailsService;
+    SecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 
-
+@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/hello_page/**").permitAll()
-                        .requestMatchers("/user_page/**").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
-                        .requestMatchers("/admin_page/**").hasRole("ROLE_ADMIN")
+        http.
+                authorizeHttpRequests(auth -> auth
+                        .requestMatchers( "/hello_page/**", "/images/**").permitAll()
+                        .requestMatchers("/user_page/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/admin_page/**").hasRole("ADMIN")
+                        .requestMatchers("/dashboard").authenticated()
                         .anyRequest().authenticated())
 
                 .formLogin(form -> form // 3. Настройка формы входа
-                        .defaultSuccessUrl("/dashboard")
-                        .failureUrl("hello_page")
+                        .defaultSuccessUrl("/dashboard",true)
+                        .failureUrl("/hello_page?error=true")
                         .permitAll()
                 )
-                .logout(logout -> logout // 4. Настройка выхода
+                .logout(logout -> logout.permitAll() // 4. Настройка выхода
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/hello_page")
                         .deleteCookies("JSESSIONID")
