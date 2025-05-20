@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
     public void update(User updatedUser) {
         userRepository.save(updatedUser);
     }
-
+@Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username) // Optional<User>
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь " + username + " не найден"));
