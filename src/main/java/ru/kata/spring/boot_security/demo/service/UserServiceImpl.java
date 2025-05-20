@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 
 
 @Service
-@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -46,7 +45,7 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    @Transactional(readOnly = true)
+
     @Override
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
