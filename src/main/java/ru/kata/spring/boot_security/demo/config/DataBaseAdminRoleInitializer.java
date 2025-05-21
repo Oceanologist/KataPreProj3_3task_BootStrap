@@ -3,6 +3,8 @@ package ru.kata.spring.boot_security.demo.config;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.kata.spring.boot_security.demo.entity.Role;
@@ -10,10 +12,11 @@ import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Component
-public class DataBaseAdminRoleInitializer {
+public class DataBaseAdminRoleInitializer implements CommandLineRunner {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -25,13 +28,13 @@ public class DataBaseAdminRoleInitializer {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Transactional
-    @PostConstruct
-    public void initMethod() {
+    @Override
+    public void run(String... args) throws Exception {
         initAdminAndUserRoles();
         initAdmin();
     }
 
+    @Transactional
     public void initAdminAndUserRoles() {
         if (!roleRepository.existsByName("ROLE_ADMIN")) {
             Role role = new Role();
@@ -46,16 +49,24 @@ public class DataBaseAdminRoleInitializer {
         }
     }
 
-    public void initAdmin() {
-        if (!userRepository.findByUsername("admin").isPresent()) {
+    private void initAdmin() {
+        if (userRepository.findByUsername("admin").isEmpty()) {
             User admin = new User();
             admin.setUsername("admin");
             admin.setPassword(passwordEncoder.encode("admin123"));
-            Role adminRole = roleRepository.findByName("ROLE_ADMIN").orElseThrow(() -> new RuntimeException("Роль Admin не найдена"));
-            Role userRole = roleRepository.findByName("ROLE_USER").orElseThrow(() -> new RuntimeException("Роль User не найдена"));
-            admin.addRole(adminRole);
-            admin.addRole(userRole);
+            admin.setAge(30);
+            admin.setEmail("admin@example.com");
+            admin.setLastName("Adminov");
+
+            Set<Role> roles = new HashSet<>();
+            roles.add(roleRepository.findByName("ROLE_ADMIN")
+                    .orElseThrow(() -> new RuntimeException("Role ADMIN not found")));
+            roles.add(roleRepository.findByName("ROLE_USER")
+                    .orElseThrow(() -> new RuntimeException("Role USER not found")));
+
+            admin.setRoles(roles);
             userRepository.save(admin);
         }
     }
+
 }
