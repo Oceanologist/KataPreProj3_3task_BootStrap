@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,6 +15,8 @@ import java.util.HashSet;
 
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
@@ -53,59 +57,6 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String name) {
-        this.username = name;
-    }
-
-    public @Size(min = 2, message = "Не меньше 2 знаков") String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(@Size(min = 2, message = "Не меньше 2 знаков") String lastName) {
-        this.lastName = lastName;
-    }
-
-    public @Size(min = 2, message = "Не меньше 2 знаков") String getEmail() {
-        return email;
-    }
-
-    public void setEmail(@Size(min = 2, message = "Не меньше 2 знаков") String email) {
-        this.email = email;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
     public User(String username, String lastName, String email, int age, String password) {
         this.username = username;
         this.lastName = lastName;
@@ -114,10 +65,6 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public User(String name, String password) {
-        this.username = name;
-        this.password = password;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

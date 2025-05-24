@@ -5,6 +5,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.entity.User;
@@ -24,18 +25,21 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
     @Override
     public void add(User user) {
-        user.setRoles(Set.of(roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("В классе UserServiceImp ошибка в поиске ROLE_USER"))));
+        user.addRole(roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("В классе UserServiceImp ошибка в поиске ROLE_USER")));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -66,11 +70,13 @@ public class UserServiceImpl implements UserService {
     public void update(User updatedUser) {
         userRepository.save(updatedUser);
     }
-@Transactional
+
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username) // Optional<User>
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь " + username + " не найден"));
         user.getRoles().size();
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return user;
     }
 }
