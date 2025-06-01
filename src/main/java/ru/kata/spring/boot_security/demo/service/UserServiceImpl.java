@@ -65,18 +65,24 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     @Transactional
     @Override
     public void update(User updatedUser) {
         userRepository.save(updatedUser);
     }
-
-    @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username) // Optional<User>
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь " + username + " не найден"));
-        user.getRoles().size();
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return user;
-    }
+//
+//    @Transactional
+//    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+//        System.err.println("UserDetailServise ------  "+email);
+//        User user = userRepository.findByEmail(email) // Optional<User>
+//                .orElseThrow(() -> new UsernameNotFoundException("Пользователь " + email + " не найден"));
+//        user.getRoles().size();
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        return user;
+//    }
 }

@@ -25,11 +25,11 @@ public class User implements UserDetails {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "username", unique = true)
+    @Column(name = "username")
     @Size(min = 2, message = "Не меньше 2 знаков")
     private String username;
 
-    @Column(name = "lastName", unique = true)
+    @Column(name = "lastName")
     @Size(min = 2, message = "Не меньше 2 знаков")
     private String lastName;
 

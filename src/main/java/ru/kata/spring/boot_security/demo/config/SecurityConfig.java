@@ -3,12 +3,15 @@ package ru.kata.spring.boot_security.demo.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -24,28 +27,39 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // 1. Хранение токена в cookie
+                        .ignoringRequestMatchers("/api/**") // 2. Если есть API, которые не требуют CSRF
+                )
                 .userDetailsService(userDetailsService).
                 authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/hello_page/**", "/images/**").permitAll()
                         .requestMatchers("/user_page/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/admin_page/**").hasRole("ADMIN")
                         .requestMatchers("/dashboard").authenticated()
                         .anyRequest().authenticated())
 
-                .formLogin(form -> form // 3. Настройка формы входа
+                .formLogin(form -> form.loginPage("/login").usernameParameter("email") // 3. Настройка формы входа
                         .defaultSuccessUrl("/dashboard", true)
-                        .failureUrl("/hello_page?error=true")
+                        .failureUrl("/login?error=true")
                         .permitAll()
                 )
-                .logout(logout -> logout.permitAll() // 4. Настройка выхода
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/hello_page")
-                        .deleteCookies("JSESSIONID")
-                )
+                .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")
+                .deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .permitAll()
+        )
                 .exceptionHandling(ex -> ex // 5. Обработка ошибок
                         .accessDeniedPage("/access-denied")
                 );
         return http.build();
+    }
+
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 
 

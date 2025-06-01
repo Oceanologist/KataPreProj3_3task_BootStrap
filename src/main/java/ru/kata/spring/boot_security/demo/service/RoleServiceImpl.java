@@ -6,6 +6,7 @@ import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -36,4 +37,6 @@ public class RoleServiceImpl implements RoleService {
     public void addRole(Role role) {
         roleRepository.save(role);
     }
+
+    public List<Role> getAllRoles(){return roleRepository.findAll();}
 }

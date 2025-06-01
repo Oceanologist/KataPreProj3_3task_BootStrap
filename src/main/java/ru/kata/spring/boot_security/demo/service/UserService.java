@@ -17,7 +17,7 @@ public interface UserService {
     Optional<User> findByName(String name);
 
     List<User> viewAll();
-
+    Optional<User> findByEmail(String email);
 
 }
 
