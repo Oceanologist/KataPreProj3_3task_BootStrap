@@ -26,9 +26,15 @@ public class AppController {
         this.roleService = roleRepository;
 
     }
+
     @GetMapping("/logout")
     public String logout() {
         return "login";
+    }
+
+    @GetMapping("/access-denied")
+    public String exeptionMethod() {
+        return "access-denied";
     }
 
 

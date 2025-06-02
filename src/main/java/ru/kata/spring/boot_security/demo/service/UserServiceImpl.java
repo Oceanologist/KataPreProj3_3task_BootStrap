@@ -75,14 +75,5 @@ public class UserServiceImpl implements UserService {
     public void update(User updatedUser) {
         userRepository.save(updatedUser);
     }
-//
-//    @Transactional
-//    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//        System.err.println("UserDetailServise ------  "+email);
-//        User user = userRepository.findByEmail(email) // Optional<User>
-//                .orElseThrow(() -> new UsernameNotFoundException("Пользователь " + email + " не найден"));
-//        user.getRoles().size();
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        return user;
-//    }
+
 }

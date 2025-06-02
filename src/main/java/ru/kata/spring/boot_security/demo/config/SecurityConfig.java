@@ -28,28 +28,27 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // 1. Хранение токена в cookie
-                        .ignoringRequestMatchers("/api/**") // 2. Если есть API, которые не требуют CSRF
-                )
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))// 1. Хранение токена в cookie
                 .userDetailsService(userDetailsService).
                 authorizeHttpRequests(auth -> auth
                         .requestMatchers("/user_page/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/dashboard").authenticated()
                         .anyRequest().authenticated())
 
-                .formLogin(form -> form.loginPage("/login").usernameParameter("email") // 3. Настройка формы входа
+                .formLogin(form -> form.loginPage("/login")
+                        .usernameParameter("email") // 3. Настройка формы входа
                         .defaultSuccessUrl("/dashboard", true)
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )
                 .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
-                .deleteCookies("JSESSIONID")
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .permitAll()
-        )
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .deleteCookies("JSESSIONID")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .permitAll()
+                )
                 .exceptionHandling(ex -> ex // 5. Обработка ошибок
                         .accessDeniedPage("/access-denied")
                 );
