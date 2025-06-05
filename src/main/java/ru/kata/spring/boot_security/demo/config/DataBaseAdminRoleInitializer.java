@@ -43,7 +43,6 @@ public class DataBaseAdminRoleInitializer implements CommandLineRunner {
             Role role = new Role();
             role.setName("ROLE_USER");
             roleService.addRole(role);
-            System.err.println("initAdminAndUserRoles");
         }
     }
 

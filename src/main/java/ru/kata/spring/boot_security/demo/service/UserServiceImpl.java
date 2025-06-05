@@ -37,7 +37,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void add(User user) {
-        user.addRole(roleRepository.findByName("ROLE_USER").orElseThrow(() -> new RuntimeException("В классе UserServiceImp ошибка в поиске ROLE_USER")));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
@@ -72,8 +71,17 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void update(User updatedUser) {
-        userRepository.save(updatedUser);
-        updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
-    }
+        User existingUser = userRepository.findById(updatedUser.getId()).orElseThrow();
+        if (!passwordEncoder.matches(updatedUser.getPassword(), existingUser.getPassword())) {
+            updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        } else {
+            updatedUser.setPassword(existingUser.getPassword());
+        }
+        existingUser.setUsername(updatedUser.getUsername());
+        existingUser.setLastName(updatedUser.getLastName());
+        existingUser.setAge(updatedUser.getAge());
+        existingUser.setRoles(updatedUser.getRoles());
+        userRepository.save(existingUser);
 
+    }
 }
