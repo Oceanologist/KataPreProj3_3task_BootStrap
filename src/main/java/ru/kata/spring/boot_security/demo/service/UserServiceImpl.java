@@ -66,14 +66,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
-    }
+    }пше
 
     @Transactional
     @Override
     public void update(User updatedUser) {
         User existingUser = userRepository.findById(updatedUser.getId()).orElseThrow();
         if (!passwordEncoder.matches(updatedUser.getPassword(), existingUser.getPassword())) {
-            updatedUser.setPassword(passwordEncoder.encode(existingUser.getPassword()));
+            updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         }
         userRepository.save(updatedUser);
     }
