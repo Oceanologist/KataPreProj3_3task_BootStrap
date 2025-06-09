@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.DTO.UserRequestDTO;
 import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
@@ -35,8 +36,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    @Override
-    public void add(User user) {
+    public void add(UserRequestDTO userRequestDTO) {
+        User user = new User(userRequestDTO.getUsername()
+                , userRequestDTO.getLastName()
+                , userRequestDTO.getEmail()
+                , userRequestDTO.getAge()
+                , userRequestDTO.getPassword());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
@@ -66,15 +71,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
-    }пше
+    }
 
     @Transactional
     @Override
-    public void update(User updatedUser) {
-        User existingUser = userRepository.findById(updatedUser.getId()).orElseThrow();
-        if (!passwordEncoder.matches(updatedUser.getPassword(), existingUser.getPassword())) {
-            updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+    public void update(UserRequestDTO userRequestDTO) {
+        User existingUser = userRepository.findById(userRequestDTO.getId()).orElseThrow();
+        if (!passwordEncoder.matches(userRequestDTO.getPassword(), existingUser.getPassword())) {
+            userRequestDTO.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
         }
-        userRepository.save(updatedUser);
+        userRepository.save(userRequestDTO
+        );
     }
 }

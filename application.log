@@ -1699,3 +1699,58 @@ Consider defining a bean of type 'ru.kata.spring.boot_security.demo.service.User
 2025-06-05T19:59:55.757+03:00  INFO 13696 --- [demo] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
 2025-06-05T19:59:55.764+03:00  INFO 13696 --- [demo] [restartedMain] r.k.s.b.demo.DemoApplication             : Started DemoApplication in 1.189 seconds (process running for 2669.715)
 2025-06-05T19:59:55.823+03:00  INFO 13696 --- [demo] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2025-06-05T20:21:09.432+03:00  INFO 13696 --- [demo] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 1 deletion, 0 modifications)
+2025-06-05T20:21:09.434+03:00  INFO 13696 --- [demo] [Thread-21] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-06-05T20:21:09.442+03:00  INFO 13696 --- [demo] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-06-05T20:21:09.445+03:00  INFO 13696 --- [demo] [Thread-21] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-05T20:21:09.446+03:00  INFO 13696 --- [demo] [Thread-21] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Shutdown initiated...
+2025-06-05T20:21:09.454+03:00  INFO 13696 --- [demo] [Thread-21] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Shutdown completed.
+2025-06-05T20:21:09.577+03:00  INFO 13696 --- [demo] [restartedMain] r.k.s.b.demo.DemoApplication             : Starting DemoApplication using Java 21.0.6 with PID 13696 (C:\Users\Daniil\Downloads\demo\target\classes started by Daniil in C:\Users\Daniil\Downloads\demo)
+2025-06-05T20:21:09.577+03:00 DEBUG 13696 --- [demo] [restartedMain] r.k.s.b.demo.DemoApplication             : Running with Spring Boot v3.4.5, Spring v6.2.6
+2025-06-05T20:21:09.577+03:00  INFO 13696 --- [demo] [restartedMain] r.k.s.b.demo.DemoApplication             : No active profile set, falling back to 1 default profile: "default"
+2025-06-05T20:21:09.884+03:00  INFO 13696 --- [demo] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-05T20:21:09.904+03:00  INFO 13696 --- [demo] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 18 ms. Found 2 JPA repository interfaces.
+2025-06-05T20:21:10.109+03:00  INFO 13696 --- [demo] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-06-05T20:21:10.112+03:00  INFO 13696 --- [demo] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-06-05T20:21:10.112+03:00  INFO 13696 --- [demo] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-06-05T20:21:10.147+03:00  INFO 13696 --- [demo] [restartedMain] o.a.c.c.C.[Tomcat-3].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2025-06-05T20:21:10.147+03:00  INFO 13696 --- [demo] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 566 ms
+2025-06-05T20:21:10.217+03:00  INFO 13696 --- [demo] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-06-05T20:21:10.222+03:00  INFO 13696 --- [demo] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-06-05T20:21:10.241+03:00  INFO 13696 --- [demo] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-05T20:21:10.243+03:00  INFO 13696 --- [demo] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Starting...
+2025-06-05T20:21:10.266+03:00  INFO 13696 --- [demo] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-8 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1729e565
+2025-06-05T20:21:10.266+03:00  INFO 13696 --- [demo] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Start completed.
+2025-06-05T20:21:10.269+03:00  INFO 13696 --- [demo] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-8)']
+	Database driver: undefined/unknown
+	Database version: 8.0.41
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-06-05T20:21:10.381+03:00  INFO 13696 --- [demo] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-06-05T20:21:10.412+03:00  INFO 13696 --- [demo] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-05T20:21:10.531+03:00  WARN 13696 --- [demo] [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'dataBaseAdminRoleInitializer' defined in file [C:\Users\Daniil\Downloads\demo\target\classes\ru\kata\spring\boot_security\demo\config\DataBaseAdminRoleInitializer.class]: Unsatisfied dependency expressed through constructor parameter 1: No qualifying bean of type 'ru.kata.spring.boot_security.demo.service.UserService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
+2025-06-05T20:21:10.532+03:00  INFO 13696 --- [demo] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-05T20:21:10.533+03:00  INFO 13696 --- [demo] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Shutdown initiated...
+2025-06-05T20:21:10.555+03:00  INFO 13696 --- [demo] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Shutdown completed.
+2025-06-05T20:21:10.556+03:00  INFO 13696 --- [demo] [restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2025-06-05T20:21:10.564+03:00  INFO 13696 --- [demo] [restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-06-05T20:21:10.574+03:00 ERROR 13696 --- [demo] [restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 1 of constructor in ru.kata.spring.boot_security.demo.config.DataBaseAdminRoleInitializer required a bean of type 'ru.kata.spring.boot_security.demo.service.UserService' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'ru.kata.spring.boot_security.demo.service.UserService' in your configuration.
+
